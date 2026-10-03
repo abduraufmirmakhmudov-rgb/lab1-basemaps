@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lab 2 | Chicago Landmarks</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        #map { height: 600px; }
+        .popup h2 { font-size: 18px; }
+        .popup img { width: 250px; height: 204px; object-fit: contain; }
+        .credit { font-size: 11px; }
+    </style>
+</head>
+<body>
+    <h1>Lab 2: Chicago Landmarks</h1>
+    <p>This map shows three places in Chicago. Click a marker to see a description and photo.</p>
+    <div id="map" aria-label="Interactive map of three Chicago landmarks"></div>
+    <script>
+        // Initialize the map at a scale that includes all three landmarks.
+        var map = L.map('map', { center: [41.8837, -87.6167], zoom: 14 });
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+            minZoom: 3,
+            maxZoom: 16
+        }).addTo(map);
+
+        // A custom camera icon, stored as an SVG image inside this HTML file.
+        // The bottom of the pin is anchored to each landmark's coordinates.
+        var cameraImage = '<svg xmlns="http://www.w3.org/2000/svg" width="44" height="56" viewBox="0 0 44 56"><path d="M22 54C18 46 2 33 2 22a20 20 0 1 1 40 0c0 11-16 24-20 32Z" fill="#087e8b" stroke="white" stroke-width="2"/><path d="M9 17h7l2-4h8l2 4h7v16H9Z" fill="white"/><circle cx="22" cy="25" r="6" fill="#087e8b"/><circle cx="22" cy="25" r="3" fill="white"/></svg>';
+        var landmarkIcon = L.icon({
+            iconUrl: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(cameraImage),
+            iconSize: [44, 56],
+            iconAnchor: [22, 54],
+            popupAnchor: [0, -48]
+        });
+
+        // Each marker has descriptive alternate text and its own text-and-image popup.
+        var marker1 = L.marker([41.8758, -87.6189], {
+            icon: landmarkIcon, alt: 'Buckingham Fountain', title: 'Buckingham Fountain'
+        }).addTo(map);
+        marker1.bindPopup('<div class="popup"><h2>Buckingham Fountain</h2>' +
+            '<p>A landmark fountain in Grant Park, between downtown Chicago and Lake Michigan.</p>' +
+            '<img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Buckingham_Fountain_Chicago.jpg/330px-Buckingham_Fountain_Chicago.jpg" alt="Buckingham Fountain spraying water with the Chicago skyline behind it" width="250">' +
+            '<p class="credit">Photo: Shoffman11, public domain. <a href="https://commons.wikimedia.org/wiki/File:Buckingham_Fountain_Chicago.jpg" target="_blank" rel="noopener">Image source</a>.</p></div>');
+
+        var marker2 = L.marker([41.8796, -87.6237], {
+            icon: landmarkIcon, alt: 'Art Institute of Chicago', title: 'Art Institute of Chicago'
+        }).addTo(map);
+        marker2.bindPopup('<div class="popup"><h2>Art Institute of Chicago</h2>' +
+            '<p>An art museum on Michigan Avenue beside Grant Park. This historical photo shows its main building circa 1910–1920.</p>' +
+            '<img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Art_Institute_of_Chicago_Main_Building_%28Photo_circa_1910-1920%29.jpg/330px-Art_Institute_of_Chicago_Main_Building_%28Photo_circa_1910-1920%29.jpg" alt="Historical black-and-white view of the Art Institute of Chicago main entrance circa 1910 to 1920" width="250">' +
+            '<p class="credit">Photo: Chicago Tribune, public domain. <a href="https://commons.wikimedia.org/wiki/File:Art_Institute_of_Chicago_Main_Building_(Photo_circa_1910-1920).jpg" target="_blank" rel="noopener">Image source</a>.</p></div>');
+
+        var marker3 = L.marker([41.8916, -87.6098], {
+            icon: landmarkIcon, alt: 'Navy Pier entrance at Polk Bros Park', title: 'Navy Pier'
+        }).addTo(map);
+        marker3.bindPopup('<div class="popup"><h2>Navy Pier</h2>' +
+            '<p>A lakefront destination extending into Lake Michigan. This marker identifies the entrance near Polk Bros Park.</p>' +
+            '<img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Navy_Pier_entrance_and_fountain%2C_Chicago_%2849687527776%29.jpg/330px-Navy_Pier_entrance_and_fountain%2C_Chicago_%2849687527776%29.jpg" alt="Navy Pier entrance sign and the fountain at Polk Bros Park" width="250">' +
+            '<p class="credit">Photo: Matt Kieffer, <a href="https://creativecommons.org/licenses/by-sa/2.0/" target="_blank" rel="noopener">CC BY-SA 2.0</a>, displayed at reduced size. <a href="https://commons.wikimedia.org/wiki/File:Navy_Pier_entrance_and_fountain,_Chicago_(49687527776).jpg" target="_blank" rel="noopener">Image source</a>.</p></div>');
+    </script>
+</body>
+</html>
