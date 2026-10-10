@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NEIU Main Campus Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        body { margin: 12px; font-family: Arial, sans-serif; }
+        h1 { font-size: 24px; margin: 12px 0; }
+        #map { height: 70vh; min-height: 450px; }
+        .popup h2 { font-size: 17px; margin: 0 0 8px; }
+        .popup img { width: 250px; height: 160px; object-fit: contain; }
+        .popup p { margin: 8px 0; }
+        .credit { font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>NEIU Main Campus Map</h1>
+    <p>A guide for new students at Northeastern Illinois University. Click a marker to learn about a campus location.</p>
+    <div id="map" aria-label="Map of five locations on Northeastern Illinois University's main campus"></div>
+    <p class="credit">Photos and campus information: <a href="https://www.neiu.edu/about/campus-map-and-directions">NEIU</a>.
+        Building locations: OpenStreetMap. Use the control in the top right to change the basemap.</p>
+    <script>
+        var map = L.map('map', { center: [41.9810, -87.7185], zoom: 17 });
+
+        var streets = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        var imagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community',
+            maxZoom: 19
+        });
+
+        var basemaps = {
+            'OpenStreetMap': streets,
+            'Satellite Imagery': imagery
+        };
+        L.control.layers(basemaps, null, { collapsed: false }).addTo(map);
+
+        // Each marker has a name, photo, and a short description.
+        function addLocation(lat, lng, name, photo, alt, description, source) {
+            return L.marker([lat, lng], { title: name, alt: name }).addTo(map)
+                .bindPopup('<div class="popup"><h2>' + name + '</h2>' +
+                    '<img src="' + photo + '" alt="' + alt + '">' +
+                    '<p>' + description + '</p>' +
+                    '<a href="' + source + '">More information from NEIU</a></div>', { maxWidth: 270 });
+        }
+
+        var library = addLocation(41.98036, -87.71918,
+            'Ronald Williams Library',
+            'https://www.neiu.edu/sites/default/files/2025-07/LOC-main-campus-library.jpg',
+            'Ronald Williams Library and the walkways leading to its entrance',
+            'Borrow books, find a study space, or ask a librarian for help with research.',
+            'https://www.neiu.edu/libraries');
+
+        var studentUnion = addLocation(41.98134, -87.71857,
+            'Student Union (SU)',
+            'https://www.neiu.edu/sites/default/files/inline-images/neiu-campus-wallpaper.jpg',
+            'Student Union entrance beside campus trees and walkways',
+            'Get your student ID at the Welcome Desk, eat in the cafeteria, or attend campus events.',
+            'https://catalog.neiu.edu/university/organization-university/student-affairs/student-union-event-conference-services/');
+
+        var walesa = addLocation(41.98239, -87.71852,
+            'Lech Walesa Hall (LWH)',
+            'https://www.neiu.edu/sites/default/files/inline-images/LOC-lech-walesa-hall-223.jpg',
+            'Lech Walesa Hall with its name above the windows',
+            'Attend classes here and visit offices in the Daniel L. Goodwin College of Education.',
+            'https://www.neiu.edu/academics/colleges-departments/education/about-our-college');
+
+        var brommel = addLocation(41.98044, -87.71706,
+            'Bernard J. Brommel Hall (BBH)',
+            'https://www.neiu.edu/sites/default/files/inline-images/neiu-bbh-wallpaper.jpg',
+            'Brick exterior of Bernard J. Brommel Hall beside the campus lawn',
+            'Attend science classes or get tutoring at the Student Center for Science Engagement in room 247.',
+            'https://www.neiu.edu/academics/our-centers-and-programs/student-center-science-engagement');
+
+        var nest = addLocation(41.97958, -87.71996,
+            'The Nest Student Housing',
+            'https://www.neiu.edu/sites/default/files/styles/wide/public/2024-04/neiu-admissions-housing.jpg?itok=_4Iv3XrG',
+            'Blue entrance marked The Nest at the student residence hall',
+            'On-campus housing where residents live, study, and meet other students in shared spaces.',
+            'https://www.neiu.edu/university-life/housing-residence-life');
+
+        var locations = L.featureGroup([library, studentUnion, walesa, brommel, nest]);
+        map.fitBounds(locations.getBounds(), { padding: [45, 45], maxZoom: 17 });
+    </script>
+</body>
+</html>
